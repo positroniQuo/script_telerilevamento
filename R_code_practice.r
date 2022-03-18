@@ -18,3 +18,9 @@ plot(l2011[[1]] , col = clb)
 pdf("banda1.pdf") #esporto come pdf
 plot(l2011$B1_sre, col=clb)
 dev.off()
+clg <- colorRampPalette(c("dark green", "green", "light green")) (100)
+plot(l2011$B2_sre, col=clg)
+# multiframe
+par(mfrow=c(1,2))
+plot(l2011$B1_sre, col=clb)
+plot(l2011$B2_sre, col=clg)
