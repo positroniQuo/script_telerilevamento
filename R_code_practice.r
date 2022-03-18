@@ -24,3 +24,9 @@ plot(l2011$B2_sre, col=clg)
 par(mfrow=c(1,2))
 plot(l2011$B1_sre, col=clb)
 plot(l2011$B2_sre, col=clg)
+
+dev.off()
+
+par(mfrow=c(1,2))
+plot(l2011$B1_sre, col=clb)
+plot(l2011$B2_sre, col=clg)
