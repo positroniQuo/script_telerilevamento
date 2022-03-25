@@ -1,4 +1,7 @@
 library( raster )
+
+# R è CASE SENSITIVE!!!!!!!!!!!!!!!!!!
+
 setwd("C:/lab/") # windows
 l2011 <- brick("p224r63_2011.grd")
 cl <- colorRampPalette(c("black", "grey", "light grey")) (100) #scelgo una scala di colori adeguata
@@ -43,3 +46,17 @@ plot(l2011$B3_sre, col=clr)
 # NIR
 clnir <- colorRampPalette(c("red", "orange", "yellow")) (100)
 plot(l2011$B4_sre, col=clnir)
+
+plotRGB # da recuperare
+
+plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
+l2006 <- brick("p224r63_2011.grd")
+par(mfrow=c(2,1))
+plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
+plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
+
+# DVI Difference Vegetation Index
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+dvi1992 = l1992[[1]] - l1992[[2]]
+dvi2006 = l2006[[1]] - l2006[[2]]
+dvi_dif = dvi1992 - dvi2006
