@@ -20,7 +20,7 @@ plot(l2011$B1_sre, col=clb)
 dev.off()
 clg <- colorRampPalette(c("dark green", "green", "light green")) (100)
 plot(l2011$B2_sre, col=clg)
-# multiframe
+# multiframe, visualizzazione immagini multiple in  contemporanea
 par(mfrow=c(1,2))
 plot(l2011$B1_sre, col=clb)
 plot(l2011$B2_sre, col=clg)
@@ -30,3 +30,16 @@ dev.off()
 par(mfrow=c(2,1))
 plot(l2011$B1_sre, col=clb)
 plot(l2011$B2_sre, col=clg)
+
+# plottiamo le prime 4 bande separatamente
+par(mfrow=c(2,2))
+# blu
+plot(l2011$B1_sre, col=clb) 
+# verde
+plot(l2011$B2_sre, col=clg) 
+# rosso
+clr <- colorRampPalette(c("dark red", "red", "pink")) (100)
+plot(l2011$B3_sre, col=clr)
+# NIR
+clnir <- colorRampPalette(c("red", "orange", "yellow")) (100)
+plot(l2011$B4_sre, col=clnir)
