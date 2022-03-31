@@ -69,20 +69,20 @@ install.packages("rgdal")
 l1992 <- brick("defor1_.jpg")
 l2006 <- brick("defor2_.jpg")
 
-#calcolo DVI e NDVI ed eseguo i plot in multiframe per evidenziare le differenze
+#calcolo DVI e NDVI ed eseguo i plot in multiframe dei due NDVI per evidenziare le differenze
 
 dvi1992 = l1992[[1]] - l1992[[2]]
 ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
+
+dvi2006 = l2006[[1]] - l2006[[2]]
+ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
 
 par(mfrow=c(2,1))
 plot(ndvi1992, col=cl)
 plot(ndvi2006, col=cl)
 
-dvi2006 = l2006[[1]] - l2006[[2]]
-ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
 
 
-dvi2006 = l2006[[1]] - l2006[[2]]
-ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
+par(mfrow=c(2,1))
 
 
