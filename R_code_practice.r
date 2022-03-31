@@ -55,8 +55,34 @@ par(mfrow=c(2,1))
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
 plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
 
-# DVI Difference Vegetation Index
+# + Risoluzione radiometrica= quantità di bit in un'immagine
+
+# DVI Difference Vegetation Index, permette di notare l'evoluzione delle comunità vegetali nel tempo
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
 dvi1992 = l1992[[1]] - l1992[[2]]
 dvi2006 = l2006[[1]] - l2006[[2]]
 dvi_dif = dvi1992 - dvi2006
+
+# NDVI = DVI standardizzato, permette paragoni
+# installo rgdal per poter eseguire la funzione brick su jpg
+install.packages("rgdal")
+l1992 <- brick("defor1_.jpg")
+l2006 <- brick("defor2_.jpg")
+
+#calcolo DVI e NDVI ed eseguo i plot in multiframe per evidenziare le differenze
+
+dvi1992 = l1992[[1]] - l1992[[2]]
+ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
+
+par(mfrow=c(2,1))
+plot(ndvi1992, col=cl)
+plot(ndvi2006, col=cl)
+
+dvi2006 = l2006[[1]] - l2006[[2]]
+ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
+
+
+dvi2006 = l2006[[1]] - l2006[[2]]
+ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
+
+
