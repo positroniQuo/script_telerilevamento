@@ -121,5 +121,33 @@ EN13 <- raster("EN_0013.png")
 # Utilizzo della funzione source per importare codici da fonti esterne usando file sul dispositivo: 
 # da una sola riga di codice posso ottenere passaggi anche alquanto complessi
 
+# plotto tutte le immagini
+par(mfrow=c(4,4))
+plot(EN01, col=cl)
+plot(EN02, col=cl)
+plot(EN03, col=cl)
+plot(EN04, col=cl)
+plot(EN05, col=cl)
+plot(EN06, col=cl)
+plot(EN07, col=cl)
+plot(EN08, col=cl)
+plot(EN09, col=cl)
+plot(EN10, col=cl)
+plot(EN11, col=cl)
+plot(EN12, col=cl)
+plot(EN13, col=cl)
 
+# utilizzo la funzione stack per unire i file delle immagini sotto un unico insieme
+EN <- stack(EN01, EN02, EN03, EN04, EN05, EN06, EN07, EN08, EN09, EN10, EN11, EN12, EN13)
+# plot the stack altogether
+plot(EN, col=cl)
+
+# metodo alternativo decisamente più rapido 
+rlist <- list.files(pattern="EN") # lapply(X,FUN)
+rimp <- lapply(rlist, raster) # stack
+en <- stack(rimp)
+# plot everything
+plot(en, col=cl)
+plotRGB(en, r=1, g=7, b=13, stretch="lin")
+plotRGB(en, r=1, g=7, b=13, stretch="hist")
 
