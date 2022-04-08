@@ -81,8 +81,45 @@ par(mfrow=c(2,1))
 plot(ndvi1992, col=cl)
 plot(ndvi2006, col=cl)
 
-
-
 par(mfrow=c(2,1))
+
+# lezione da recuperare x2 #
+
+# importo le immagini satellitari utilizzando raster
+# utilizzo raster invece di brick perchè necessito solo del primo layer
+# potrei utilizzare anche brick specificando di importare solo il primo layer (essendo raster una semplificazione di brick)
+
+en01 <- raster("EN_0001.png")
+# info sul topic
+# https://www.google.com/search?q=R+colours+names&tbm=isch&ved=2ahUKEwiF-77Z1bX0AhULtKQKHQ3WDWYQ2-cCegQIABAA&oq=R+colours+names&gs_lcp=CgNpbWcQAzIECAAQEzoHCCMQ7wMQJzoICAAQCBAeEBNQiQhYnwxgwg1oAHAAeACAAUqIAZYDkgEBNpgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=vKKgYYWtOovokgWNrLewBg&bih=526&biw=1056#imgrc=OtMzJfyT_OwIiM
+
+# eseguo il plottaggio usando una palette personalizzata, sia per il mese di gennaio che per dicembre 
+cl <- colorRampPalette(c('red','orange','yellow'))(100)
+plot(en01, col=cl)
+en13 <- raster("EN_0013.png")
+plot(en13, col=cl)
+# eseguo nuovamente il plot affiancando le immagini
+par(mfrow=c(2,1))
+plot(en01, col=cl)
+plot(en13, col=cl)
+
+# importo tutte le immagini
+EN01 <- raster("EN_0001.png")
+EN02 <- raster("EN_0002.png")
+EN03 <- raster("EN_0003.png")
+EN04 <- raster("EN_0004.png")
+EN05 <- raster("EN_0005.png")
+EN06 <- raster("EN_0006.png")
+EN07 <- raster("EN_0007.png")
+EN08 <- raster("EN_0008.png")
+EN09 <- raster("EN_0009.png")
+EN10 <- raster("EN_0010.png")
+EN11 <- raster("EN_0011.png")
+EN12 <- raster("EN_0012.png")
+EN13 <- raster("EN_0013.png")
+
+# Utilizzo della funzione source per importare codici da fonti esterne usando file sul dispositivo: 
+# da una sola riga di codice posso ottenere passaggi anche alquanto complessi
+
 
 
