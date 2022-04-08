@@ -150,4 +150,6 @@ en <- stack(rimp)
 plot(en, col=cl)
 plotRGB(en, r=1, g=7, b=13, stretch="lin")
 plotRGB(en, r=1, g=7, b=13, stretch="hist")
-
+# installo e richiamo il pacchetto RStoolbox
+install.packages("RStoolbox")
+library(RStoolbox)
