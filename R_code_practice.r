@@ -168,5 +168,20 @@ library(ggplot2)
 ggRGB(l92, 1, 2, 3, stretch="lin")
 ggRGB(l06, 1, 2, 3, stretch="lin")
 
+install.packages("patchwork")
+library(patchwork)
+
+P1 <- ggRGB(l92, 1, 2, 3, stretch="lin")
+P2 <- ggRGB(l06, 1, 2, 3, stretch="lin")
+P1+P2
+P1/P2 #ommioooooddioooooooooooooo
+l92c <- unsuperClass(l92, nClasses=2)
+plot(l92c$map)  #abbinamento cromatico delle classi da specificare 
+l06c <- unsuperClass(l06, nClasses=2)
+plot(l06c$map)
+freq(l92$map) #calcolo con freq il numero di pixels appartenenti ad ogni classe 
+freq(l06$map)
+
+
 
 
