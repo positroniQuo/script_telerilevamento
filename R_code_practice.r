@@ -153,3 +153,20 @@ plotRGB(en, r=1, g=7, b=13, stretch="hist")
 # installo e richiamo il pacchetto RStoolbox
 install.packages("RStoolbox")
 library(RStoolbox)
+
+#lezione da recuperare
+
+install.packages("ggplot2")
+
+l92 <- brick("defor1_.jpg")
+l06 <- brick("defor2_.jpg")
+par(mfrow=c(2,1))
+plotRGB(l06, 1, 2, 3, stretch="lin")
+plotRGB(l92, 1, 2, 3, stretch="lin")
+dev.off()
+library(ggplot2)
+ggRGB(l92, 1, 2, 3, stretch="lin")
+ggRGB(l06, 1, 2, 3, stretch="lin")
+
+
+
