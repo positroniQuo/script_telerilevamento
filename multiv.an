@@ -1,0 +1,10 @@
+# Codice per analisi multivariata.
+
+setwd("C:/lab/")
+library(raster)
+library(RStoolbox)
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
+plot(p224r63_2011)
+p224r63_2011
+ library(patchwork)
+ library(ggplot2)
