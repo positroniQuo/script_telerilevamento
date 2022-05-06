@@ -8,3 +8,16 @@ plot(p224r63_2011)
 p224r63_2011
  library(patchwork)
  library(ggplot2)
+p224r63_2011res <- aggregate(p224r63_2011, fact=10)
+g1 <- ggRGB(p224r63_2011, 4,3,2)
+g2 <- ggRGB(p224r63_2011res, 4,3,2) g1+g2
+g1+g2
+p224r63_2011respca <- rasterPCA(p224r63_2011res)
+summary(p224r63_2011respca$model)
+plot(p224r63_2011respca$map)
+ggplot() +
+geom_raster(p224r63_2011respca$map, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option = "magma") +
+ggtitle("Standard deviation by viridis package")
+library(viridis)
+
