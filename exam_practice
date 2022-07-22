@@ -1,0 +1,11 @@
+# Practice for exam
+
+# First we need a package to operate with raster data. For this we install the "raster" package
+
+install.packages("raster")
+
+# Then we need a working directory for our code, data and outputs to go, so we create one eand we set it to be used by this code
+
+setwd("C:/lab_2/")
+
+# Let's import our first image
