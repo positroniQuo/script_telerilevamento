@@ -8,4 +8,16 @@ install.packages("raster")
 
 setwd("C:/lab_2/")
 
-# Let's import our first image
+# Let's import our first landsat raster image. To do this we use the "brick" function, that imports the image with all layers
+
+l2011 <- brick("p224r63_2011.grd")
+
+# Lest's check how the import went
+
+l2011
+
+# Now we look at the actual image: one of the easyest options is to use the "plot"  function
+
+plot(l2011)     
+
+  
