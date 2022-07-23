@@ -30,8 +30,7 @@ plot(l2011)
 
 # I assign colors other than the default ones 
 
-cl <- colorRampPalette(c("black", "grey", "light grey")) (100) 
-
+cl <- colorRampPalette(c("black", "grey", "light grey")) (100)  
 plot(l2011, col=cl) 
 
 # I can choose to plot a single band selecting it: there are different ways, here are two
@@ -125,9 +124,11 @@ install.packages("RStoolbox")
 library(RStoolbox)
 
 # I can use "brick" to import a .jpg image as well
-# Let's visualize it with "plotRGB"
+# Let's visualize two images from the same site, but 14 years apart from each other, with "par" and "plotRGB"
 
 l1992 <- brick("defor1_.jpg")
+
+l1992 
 
 # layer 1 = NIR
 # layer 2 = red
@@ -135,5 +136,71 @@ l1992 <- brick("defor1_.jpg")
 
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
 
+l2006 <- brick("defor2_.jpg")
+
+l2006
+
+plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
+
+par(mfrow=c(2,1))
+plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
+plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
+
+# The DVI, or Difference Vegetation Index, is useful to visualize vegetation in an area, 
+# since tipically the ground absorbs less PAR (Photosintetically Active Radiation) and more NIR radiation, and vice versa for plant-covered areas,
+# thought this is not always the case (for example this is generally more true for wet soils rather than dry ones), and it is prone to interferences as clouds.
+# the DVI is simply calculated subtracting values for the red reflecance from the NIR one in every pixel. This is easily done writing it as an equation
+
+dvi1992 = l1992[[1]] - l1992[[2]]
+# or:
+# dvi1992 = l1992$defor1_.1 - l1992$defor1_.2
+
+# We can now visualize the values obtained
+
+dvi1992
+
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+plot(dvi1992, col=cl)
+
+# Repeating the procedure with the other image from 2006
+
+dvi2006 = l2006[[1]] - l2006[[2]]
+
+dvi2006
+
+# Besides having a visual on the vegetation cover, we can use this simple index to also compare images.
+# I will now visualize calculate the difference between the two indexes
+
+dvi_diff = dvi1992 - dvi2006
+
+cld <- colorRampPalette(c('blue','white','red'))(100)
+plot(dvi_dif, col=cld)
+
+# As we can see this can be very useful in this case, but there are limits:
+# we cannot effectively compare two DVI images with different resolutions, since values would not be compatible.
+# to deal with this problem a much more useful, yet still simple index can be used.
+# The NDVI (N is for normalized) is calculated with this formula:
+# NDVI = DVI / NIR reflectance + Red reflectance
+# the value obtained ranges from -1 to +1, therefore becomes comparable between other images taken in different resolutions
+
+ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
+
+ndvi1992
+
+ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
+
+ndvi2006
 
 
+# It is now much easyer to showcase the differences in vegetation cover
+
+par(mfrow=c(2,1))
+plot(ndvi1992, col=cl)
+plot(ndvi2006, col=cl)
+
+# There is a shortcut to many useful indexes that can be used, thought when doing so some results may be offset if corrections 
+# aren't made when imputing the image when needed.
+
+si1992 <- spectralIndices(l1992, green=3, red=2, nir=1)
+
+plot(si1992,col=cl)
