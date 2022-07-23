@@ -1,8 +1,9 @@
 # Practice for exam               
 	
-# First i need a package to operate with raster data. For this we install the "raster" package
+# First I need a package to operate with raster data. For this I install the "raster" package, and then make it useable via the function "library"
 
 install.packages("raster")
+library(raster)
 
 # Then i need a working directory for our code, data and outputs to go, so we create one eand we set it to be used by this code
 
@@ -21,6 +22,7 @@ l2011
 # b2 = green
 # b3 = red
 # b4 = NIR, or Near InfraRed
+# Some wavelenghts are useful for specific analysis', like NIR, which is reflected off vegetation.
 
 # Now I look at the actual image: one of the easyest options is to use the "plot"  function
 
@@ -115,3 +117,23 @@ l1988 <- brick("p224r63_1988.grd")
 par(mfrow=c(2,1))
 plotRGB(l1988, r=4, g=3, b=2, stretch="lin")
 plotRGB(l2011, r=4, g=3, b=2, stretch="lin")
+
+# I will now install and use another package called "RStoolbox", that enhances R with many utility functions. 
+# It will be useful later
+
+install.packages("RStoolbox")
+library(RStoolbox)
+
+# I can use "brick" to import a .jpg image as well
+# Let's visualize it with "plotRGB"
+
+l1992 <- brick("defor1_.jpg")
+
+# layer 1 = NIR
+# layer 2 = red
+# layer 3 = green
+
+plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
+
+
+
