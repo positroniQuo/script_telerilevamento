@@ -117,11 +117,13 @@ par(mfrow=c(2,1))
 plotRGB(l1988, r=4, g=3, b=2, stretch="lin")
 plotRGB(l2011, r=4, g=3, b=2, stretch="lin")
 
-# I will now install and use another package called "RStoolbox", that enhances R with many utility functions. 
-# It will be useful later
+# I will now install and use another package called "RStoolbox", that enhances R with many utility functions, and rgdal (that grants the ability to use "brick" on .jpg files)
+# They will be useful later
 
 install.packages("RStoolbox")
 library(RStoolbox)
+install.packages("rgdal")
+library(rgdal)
 
 # I can use "brick" to import a .jpg image as well
 # Let's visualize two images from the same site, but 14 years apart from each other, with "par" and "plotRGB"
