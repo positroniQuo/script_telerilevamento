@@ -396,3 +396,41 @@ grid.arrange(p1, p2, nrow=1) #visualization of graphics alongside one another
 
 install.packages("patchwork")
 library(patchwork)
+
+install.packages("viridis")
+library(viridis)
+
+sen <- brick("sentinel.png")
+
+ggRGB(sen, 1, 2, 3) # Stretch is linear by default
+
+g1 <- ggRGB(sen, 1, 2, 3)
+g2 <- ggRGB(sen, 2, 1, 3)
+
+g1+g2 # Patchwork doing its magic: graphics alongside each other
+
+g1/g2 # Graphics on top of each other
+
+nir <- sen[[1]]
+
+sd3 <- focal(nir, matrix(1/9, 3, 3), fun=sd)
+
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) #
+plot(sd3, col=clsd)
+
+ggplot() + # Metodo di plotting con ggplot
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() +
+ggtitle("Standard deviation by viridis package")
+
+ggplot() + # M  A  G  M  A
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option = "magma") +
+ggtitle("Standard deviation by viridis package")
+
+ggplot() + # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option = "inferno") +
+ggtitle("Standard deviation by viridis package")
+
+
