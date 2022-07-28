@@ -23,8 +23,8 @@ plot(en, col=cl)
 # I will compare the first image with the last in a multiframe
 
 par(mfrow=c(1,2))
-plot(en[[1]], col=cl)
-plot(en[[13]], col=cl)
+plot(en[[1]], col=cl, main="before")
+plot(en[[13]], col=cl, main=-"after")
 
 # Another way to compare the first to the last image using a simple subtraction
 
