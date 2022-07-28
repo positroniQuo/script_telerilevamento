@@ -1,6 +1,5 @@
 # The following actions will be placed in a separated subfolder
 
-
 setwd("C:/lab_2/greenland")
 
 # Importing images taken from Greenland
