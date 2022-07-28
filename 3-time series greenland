@@ -2,19 +2,28 @@
 
 setwd("C:/lab_2/greenland")
 
-# Importing images taken from Greenland
-# TIF (Tagged Image File) files can be imported with the raster function
+install.packages("rasterVis")
+
+library(raster)   
+library(rasterVis) # Raster visualization tools 
+library(rgdal)     # GDAL (Geospatial Data Abstraction Library) for R. 
+
+# Importing images taken from Greenland, to evaluate changes in LST (Land Surface Temperature)
+# TIF (Tagged Image File) files can be imported with the raster function.
+# The following files are in 16 bits resolution
  
 lst_2000 <- raster("lst_2000.tif")
 lst_2005 <- raster("lst_2005.tif")
 lst_2010 <- raster("lst_2010.tif")
 lst_2015 <- raster("lst_2015.tif")
 
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+
 par(mfrow=c(2,2))
-plot(lst_2000)
-plot(lst_2005)
-plot(lst_2010)
-plot(lst_2015)
+plot(lst2000, col=cl)
+plot(lst2005, col=cl)
+plot(lst2010, col=cl)
+plot(lst2015, col=cl)
 
 # When we work with many files, often from the same source, it can be useful to use auto sorting/selecting functions.
 
@@ -42,29 +51,3 @@ plotRGB(TGr, 4, 3, 2, stretch="Lin")
 
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 plot(TGr, col=cl)
-
-# Another example, this time with data coming from images showing air pollution during quarantine times in China
-
-setwd("C:/lab_2/en") 
-
-rlist <- list.files(pattern="EN")
-
-rimp <- lapply(rlist, raster)
-
-en <- stack(rimp)
-
-cl <- colorRampPalette(c('red','orange','yellow'))(100) 
-
-plot(en, col=cl)
-
-# Here is the procedure to extract single elements from our stack
-
-par(mfrow=c(1,2))
-plot(en[[1]], col=cl)
-plot(en[[13]], col=cl)
-
-# Comparing the first to the last image using a simple subtraction
-
-difen <- en[[1]] - en[[13]]
-cldif <- colorRampPalette(c('blue','white','red'))(100) #
-plot(difen, col=cldif)
