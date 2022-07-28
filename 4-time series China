@@ -1,0 +1,33 @@
+# Another example, this time with data coming from images showing air pollution during quarantine times in China
+
+library(raster)
+
+setwd("C:/lab_2/en") 
+
+# I could import all files by hand, but that would me remarkably inefficient.
+# Instead i can use list.files as i did with the greenland images
+
+rlist <- list.files(pattern="EN")
+
+# While brick is used for images with many layers, raster is used for files with only one
+
+rimp <- lapply(rlist, raster)
+
+en <- stack(rimp)
+
+cl <- colorRampPalette(c('red','orange','yellow'))(100) 
+
+plot(en, col=cl)
+
+# Here is the procedure to extract single elements from our stack.
+# I will compare the first image with the last in a multiframe
+
+par(mfrow=c(1,2))
+plot(en[[1]], col=cl)
+plot(en[[13]], col=cl)
+
+# Another way to compare the first to the last image using a simple subtraction
+
+difen <- en[[1]] - en[[13]]
+cldif <- colorRampPalette(c('blue','white','red'))(100) #
+plot(difen, col=cldif)
