@@ -1,0 +1,71 @@
+# This exercize is about Similaun glacier Sentinel data (location where Otzi was found)
+# There is a multitude of surfaces that reflects different ranges of wavelenghts
+
+
+
+
+# Viridis is a package containing palettes of colours specifically made for inclusivity in data analisys, since distinguishable from people with daltonism/other colour related eye disfunctions
+
+install.packages("viridis") 
+
+library(viridis)
+library(raster)   
+library(RStoolbox) # Sourse of the focal function we are going to use later
+library(ggplot2)   # Graphics from sets of data
+library(patchwork) # For easy multiframe creations
+
+sen <- brick("sentinel.png")
+
+# Sentinel images have the following bands arrangement:
+# 1 : NIR 
+# 2 : Red
+# 3 : Green
+
+ggRGB(sen, 1, 2, 3) # Stretch is linear by default
+
+g1 <- ggRGB(sen, 1, 2, 3)
+g2 <- ggRGB(sen, 2, 1, 3) # NIR becomes green, so vegetation wil be showcased accordingly
+
+g1+g2 # Patchwork doing its magic: easy way to arrange graphics alongside each other
+
+g1/g2 # Graphics on top of each other
+
+# I want to have a general idea of the variability in reflectance in the image for the NIR wavelenghts
+# It can be obtained via standard deviation.
+#  First of all i assign an object with only the NIR band
+
+nir <- sen[[1]]
+
+# The focal function does an operation on matrixes of points of specified dimentions, reporting the modified data as output.
+# I apply a standard deviation function ("fun=sd") on "nir" following a pattern of matrixes of 9 (3x3) pixels.
+# The function literally cicles on all the image with a "for" cycle until all pixels are analyzed.
+# The bigger the matrix, the more information gets summarized into bigger units, the less details i'll obtain.
+# The matrixes must be of odd numbers
+
+sd3 <- focal(nir, matrix(1/9, 3, 3), fun=sd)
+
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
+
+plot(sd3, col=clsd)
+
+# We go from low variabilities (blue) to high ones (red-yellowish)
+
+# To use ggplot we have to open an empty layer ("ggplot()") then specifyng what to put in it and it's a e s t e t h i c s
+# Layer fills the plot with the data we found earlyer
+# "ggtitle" gives a main to the plot, while we use viridis for the colour.
+# here are 3 alternatives
+
+ggplot() + 
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() +
+ggtitle("Standard deviation by viridis package")
+
+ggplot() + # M  A  G  M  A
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option = "magma") +
+ggtitle("Standard deviation by viridis package")
+
+ggplot() + # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (inferno)
+geom_raster(sd3, mapping =aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option = "inferno") +
+ggtitle("Standard deviation by viridis package")
