@@ -1,10 +1,9 @@
 # This exercize is about Similaun glacier Sentinel data (location where Otzi was found)
 # There is a multitude of surfaces that reflects different ranges of wavelenghts
 
-
-
-
 # Viridis is a package containing palettes of colours specifically made for inclusivity in data analisys, since distinguishable from people with daltonism/other colour related eye disfunctions
+
+setwd("C:/lab")
 
 install.packages("viridis") 
 
