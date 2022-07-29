@@ -41,9 +41,11 @@ lst <- list.files(path=path,pattern='asc$',full.names = T) #
 lst
 
 # stack
+
 preds <- stack(lst)
 
 # plot preds
+
 cl <- colorRampPalette(c('blue','orange','red','yellow')) (100)
 plot(preds, col=cl)
 
