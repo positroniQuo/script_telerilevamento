@@ -46,4 +46,4 @@ for (i in seq_along (lstlst)) {assign (lstlst[[i]], stack (lst[i,]))}
 # the ordered data is assigned to the corresponding object stacked, so now it is usable for plotting
 # (for example "lst16" will contain a stack of the first 6 bands from the july 2016 photo)
 
-
+plotRGB(lst02, r=3, g=2, b=1, stretch="lin")
