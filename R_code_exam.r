@@ -47,3 +47,14 @@ for (i in seq_along (lstlst)) {assign (lstlst[[i]], stack (lst[i,]))}
 # (for example "lst16" will contain a stack of the first 6 bands from the july 2016 photo)
 
 plotRGB(lst02, r=3, g=2, b=1, stretch="lin")
+
+mask <- drawExtent(show=T, col = "red")
+lstlstc <- paste0("lstc",sprintf ("%02d", as.numeric(0:21)))
+lstlst <- stack(c(lst00, lst01, lst02,lst03,lst04,lst05,lst06,lst07,lst08,lst09,lst10,lst11,lst12,lst13,lst14,lst15,lst16,lst17,lst18,lst19,lst20,lst21))
+for (i in seq_along (lstlstc)) {assign (lstlstc[i], crop(lstlst[i],mask))}
+lstc21 <- crop(lst21, mask)
+plotRGB(lstc21, r=3, g=2, b=1, stretch= "hist")
+lstc21
+
+
+lst00
