@@ -13,3 +13,28 @@
 # it will be the month from which images will be analysed.
 # Data include all the 10 mts resolution bands avaiable: RGB and NIR.
 
+library(gtools)
+library(raster)      # Lettura immagini raster
+library(patchwork)   # Composizione grafici
+library(ggplot2)     # Grafici
+library(RStoolbox)   # Strumenti per la manipolazione di immagini telerilevate
+library(viridis)     # Visualizzazione
+  
+library(rgdal)
+
+setwd("D:/sntl_data")
+
+all_sntl <- list.files(pattern="T32TQP")
+# importing files as they have been downloaded, from the working directory [alllst - all landsat]
+
+sntl <- matrix(all_sntl, nrow = 8, ncol = 4, byrow=TRUE)
+# making the unsorted data a matrix helps with elaboration:
+# rows are for years (1=2015, 2=2016...)
+# columns are for bands (1=B2, 2=B3, 3=B4, 4=B8)
+
+lst_sntl <- paste0 ('lst', sprintf ("%02d", as.numeric(15:22))) 
+# the last step to obtain the sorted bands for each year is to make a matrix of fitting names to assign them to [lstNN - landsat (years 00s-21s)]
+
+for (i in seq_along (lst_sntl)) {assign (lst_sntl[[i]], stack (sntl[i,]))}
+# the ordered data is assigned to the corresponding object stacked, so now it is usable for plotting
+# (for example "sntl16" will contain a stack of bands 2, 3, 4, and 8 from july 2016)
