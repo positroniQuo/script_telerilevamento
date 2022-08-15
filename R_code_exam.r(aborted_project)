@@ -63,4 +63,4 @@ lst00
 # reasons:
 # resolution is not fine enought for such little area.
 # switching to sentinel images with 10m resolution, 3x as much.
-# the results will be found at 
+# the results will be found at https://github.com/positroniQuo/script_telerilevamento/blob/e48d90f9378e923d54563355e38450ea4d9a1caf/R_code_exam.r
