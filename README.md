@@ -7,3 +7,4 @@ The codes are mainly divided in 11 topics that have been taught in live lessons,
 - Beginning of the exam project (later stopped due to unfixable problems) https://github.com/positroniQuo/script_telerilevamento/blob/main/R_code_exam.r(aborted_project)
 - Actual exam project https://github.com/positroniQuo/script_telerilevamento/blob/main/R_code_exam.r
 
+Every code is entirely written only using r language. (Exams projects are done in rstudio)
