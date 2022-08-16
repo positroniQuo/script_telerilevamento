@@ -17,8 +17,12 @@
 
 # SUMMARY
 # 1 # import and data preparation
+## 2 ## land cover
+
 
 # 1 # import and data preparation
+
+
 
 library(raster)           
 
@@ -72,3 +76,36 @@ plotRGB(sntl_c16, r=3, g=2, b=1, stretch="lin")
 # the resulting picture is clear enough visually.
 # images importing and first processing ends here 
 
+
+
+## 2 ## land cover
+
+
+
+library(viridis)
+library(graphics)
+library(patchwork)
+library(RStoolbox)
+
+jpeg("comparison.jpeg")
+
+par(mfrow=c(2,1))
+
+plotRGB(sntl_c15, r=3, g=2, b=1, stretch="hist")
+plotRGB(sntl_c22, r=3, g=2, b=1, stretch="hist")
+
+dev.off()
+# to begin, let's have a look at the first image (2015) paired with the last (2022) plotted in visible colours 
+# we can already see a drastic change in the complete disappearing of the lakes to the right
+
+lst_sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
+
+lst_class <- paste0 ('class', sprintf ("%02d", as.numeric(15:22))) 
+
+for (i in seq_along (lst_class)) {assign (lst_class[[i]], unsuperClass(lst_sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50))}
+
+lst_class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22)
+
+for (i in 1:8) {plot(lst_class[[i*3]], col=viridis(5))}
+
+for (i in 1:8) {print(freq(lst_class[[i*3]]))}
