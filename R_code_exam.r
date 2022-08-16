@@ -1,6 +1,6 @@
 # Author: Filippo Arceci
 
-# This code processes images taken from sentinel2A/B of the in.cal system (sources of data: EarthExplorer, Copernicus) an abandoned quarry repurposed to be a natural reserve,
+# This code processes images taken from sentinel2A/B of the In.Cal.System (sources of data: EarthExplorer, Copernicus) an abandoned quarry repurposed to be a natural reserve,
 # water storage and floodplain area near Rimini, next to the Marecchia river(link: https://albopretorio.comune.rimini.it/web/trasparenza/papca-ap?p_
 # p_id=jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=downloadAllegato&p_p_cacheability
 # =cacheLevelPage&p_p_col_id=column-1&p_p_col_count=1&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_downloadSigned=false&_jcitygovalbopubblicazioni_
@@ -13,19 +13,19 @@
 # it will be the month from which images will be analysed.
 # Data include all the 10 mts resolution bands avaiable: RGB and NIR.
 
-library(gtools)
-library(raster)      # Lettura immagini raster
-library(patchwork)   # Composizione grafici
-library(ggplot2)     # Grafici
-library(RStoolbox)   # Strumenti per la manipolazione di immagini telerilevate
-library(viridis)     # Visualizzazione
-  
-library(rgdal)
+# packages will be loaded one by one when needed in the corresponding section
+
+# SUMMARY
+# 1 # import and data preparation
+
+# 1 # import and data preparation
+
+library(raster)           
 
 setwd("D:/sntl_data")
 
 all_sntl <- list.files(pattern="T32TQP")
-# importing files as they have been downloaded, from the working directory [allsntl - all Sentinel]
+# importing files as they have been downloaded, from the working directory [allsntl = all Sentinel]
 
 sntl <- lapply(all_sntl, raster)
 # the data comes in .jp2 format, so i can use the "raster" function on it to process and plot the images with 
@@ -37,7 +37,9 @@ sntl <- matrix(sntl, nrow = 8, ncol = 4, byrow=TRUE)
 # columns are for bands (1=B2, 2=B3, 3=B4, 4=B8)
 
 lst_sntl <- paste0 ('sntl', sprintf ("%02d", as.numeric(15:22))) 
-# the last step to obtain the sorted bands for each year is to make a matrix of fitting names to assign them to [sntlNN - Sentinel (years '15-'22)]
+# the last step to obtain the sorted bands for each year is to make a matrix of fitting names to assign them to
+# "sprintf" function combines desired charachters with any variable so every name will be associated with the corresponding year
+# [sntlNN = Sentinel (years '15-'22)]
 
 for (i in seq_along (lst_sntl)) {assign (lst_sntl[[i]], stack (sntl[i,]))}
 # the ordered data is assigned to the corresponding object stacked, so now it is usable for plotting
@@ -55,15 +57,18 @@ mask <- drawExtent(show=T, col = "red")
 # repeated more than once to get more and more precise cuts, until it fits just right.
 
 lst_sntl_c <- paste0("sntl_c",sprintf ("%02d", as.numeric(15:22)))
-# creating new names for the cut images to be assigned at [lst_sntl_c = list of sentinel-cut]
+# creating new names for the cut images to be assigned at [lst_sntl_c = list of Sentinel-cut]
 
 lst_sntl <- c(sntl15, sntl16, sntl17, sntl18, sntl19, sntl20, sntl21, sntl22)
 # let's regroup the individual stacks into a list to cut and then reassign them at the new variables
 
 for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(lst_sntl[[i]],mask))}
-# a simple loop to do the previously stated actions: cutting every stack using "mask" dimentions and assign it to the new variable
+# a simple loop to do the previously stated actions: cutting every stack using "mask" dimentions and assign it to the new variable.
 # this procedure is repeated until the resulting images include only the In.Cal.System
 
 plotRGB(sntl_c16, r=3, g=2, b=1, stretch="lin")
-#controlling the results
+# controlling the results:
+# everything shows correctly, and thought resolution is still on the coarse side
+# the resulting picture is clear enough visually.
+# images importing and first processing ends here 
 
