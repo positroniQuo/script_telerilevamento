@@ -24,7 +24,8 @@
 
 
 
-library(raster)           
+library(raster)   
+library(RStoolbox)
 
 setwd("D:/sntl_data")
 
@@ -70,12 +71,23 @@ for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(sntl[[i]],mask))}
 # a simple loop to do the previously stated actions: cutting every stack using "mask" dimentions and assign it to the new variable.
 # this procedure is repeated until the resulting images include only the In.Cal.System
 
-plotRGB(sntl_c16, r=3, g=2, b=1, stretch="lin")
+sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
+# "sntl_c" is a list containing all the cut images that i can call at need to process all at once
+
+jpeg("RGB_images.jpeg")
+
+par(mfrow=c(4,2), bty="n", mai=c(0,0,0.2,0), xaxt='n', yaxt='n')
+# let's plot them
+# 4 columns and 2 rows, whith no box around the images ("bty='n'"), and with no spacing between them (spaces dim.="mai") besides for the title on top
+# axes are not plotted
+
+for (i in 1:8) {plotRGB(sntl_c[[i]], r=3, g=2, b=1, axes=T, main=(i+2014), stretch = 'hist')}
 # controlling the results:
 # everything shows correctly, and thought resolution is still on the coarse side
 # the resulting picture is clear enough visually.
 # images importing and first processing ends here 
 
+dev.off()
 
 
 ## 2 ## land cover
@@ -85,7 +97,7 @@ plotRGB(sntl_c16, r=3, g=2, b=1, stretch="lin")
 library(viridis)
 library(graphics)
 library(patchwork)
-library(RStoolbox)
+
 
 jpeg("comparison.jpeg")
 
@@ -100,13 +112,10 @@ dev.off()
 # to have a better idea of how the surrounding environment have shifted in cover over time 
 # I will be dividing the images into groups of values using the unsuperclass function
 
-sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
-# sntl_c is a list containing all the cut images that i can call at need to process all at once
-
 lst_class <- paste0 ('class', sprintf ("%02d", as.numeric(15:22))) 
 # other names for the classified images to be assigned at [lst_class = list of classified, classNN = classified (years 2015-2022)] 
 
-for (i in seq_along (lst_class)) {assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50))}
+for (i in seq_along (lst_class)) {assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 20, nClasses = 5, nStarts =15))}
 # this loop assigns to every "lst_class" entity its classified raster counterpart
 
 class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22)
@@ -116,6 +125,8 @@ class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class
 # because they repeat every 3 items.
 # this means that, for example, "class[[2]]" corresponds to "class15$model" whereas "class[[5]]" corresponds to "class16$model"
 
+par(mfrow=c(4,2), bty="n",mai=c(0,0,0.2,0))
+# 4 columns and 2 rows, whith no box around the images ("bty='n'"), and with no spacing between them (spaces dim.="mai") besides for the title on top
 
 for (i in 1:8) {plot(class[[i*3]], col=viridis(5))}
 # printing every resulting image there seems to be an issue:
@@ -134,7 +145,7 @@ is.sorted = Negate(is.unsorted)
 # and for increasing ones it will be "true"
 
 for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
-{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50)) ;
+{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 20, nClasses = 5, nStarts =15)) ;
   class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
   print(i)}}
 # since "unsuperClass" is random, repeating the process indefinitely will eventually lead to an increasingly occurring 
@@ -144,6 +155,13 @@ for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2]))
 # a loop of re-splitting images, reassigning them to their variable anew and resampling the "class" group from which the conditions are tested
 # is launched, also printing the i-th number as a way to monitor the process and know when a variable is ordered, and the loop jumps to another
 
-for (i in 1:8) {plot(class[[i*3]], col=viridis(5))}
+jpeg("classified_images.jpeg")
+
+par(mfrow=c(4,2), bty="n",mai=c(0,0,0.2,0))
+# 4 columns and 2 rows, whith no box around the images ("bty='n'"), and with no spacing between them (spaces dim.="mai") besides for the title on top
+
+for (i in 1:8) {plot(class[[i*3]], col=viridis(5), axes=F, main=i+2014)}
 # now more images share colours with one another, and we know that the yellow (5th) band will always be the most abundant,
 # and the dark purple (1st) will be the least abundant one
+
+dev.off()
