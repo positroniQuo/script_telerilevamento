@@ -17,7 +17,7 @@
 
 # SUMMARY
 # 1 # import and data preparation
-## 2 ## land cover
+
 
 
 # 1 # import and data preparation
@@ -63,10 +63,10 @@ mask <- drawExtent(show=T, col = "red")
 lst_sntl_c <- paste0("sntl_c",sprintf ("%02d", as.numeric(15:22)))
 # creating new names for the cut images to be assigned at [lst_sntl_c = list of Sentinel-cut]
 
-lst_sntl <- c(sntl15, sntl16, sntl17, sntl18, sntl19, sntl20, sntl21, sntl22)
+sntl <- c(sntl15, sntl16, sntl17, sntl18, sntl19, sntl20, sntl21, sntl22)
 # let's regroup the individual stacks into a list to cut and then reassign them at the new variables
 
-for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(lst_sntl[[i]],mask))}
+for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(sntl[[i]],mask))}
 # a simple loop to do the previously stated actions: cutting every stack using "mask" dimentions and assign it to the new variable.
 # this procedure is repeated until the resulting images include only the In.Cal.System
 
@@ -97,15 +97,53 @@ plotRGB(sntl_c22, r=3, g=2, b=1, stretch="hist")
 dev.off()
 # to begin, let's have a look at the first image (2015) paired with the last (2022) plotted in visible colours 
 # we can already see a drastic change in the complete disappearing of the lakes to the right
+# to have a better idea of how the surrounding environment have shifted in cover over time 
+# I will be dividing the images into groups of values using the unsuperclass function
 
-lst_sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
+sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
+# sntl_c is a list containing all the cut images that i can call at need to process all at once
 
 lst_class <- paste0 ('class', sprintf ("%02d", as.numeric(15:22))) 
+# other names for the classified images to be assigned at [lst_class = list of classified, classNN = classified (years 2015-2022)] 
 
-for (i in seq_along (lst_class)) {assign (lst_class[[i]], unsuperClass(lst_sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50))}
+for (i in seq_along (lst_class)) {assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50))}
+# this loop assigns to every "lst_class" entity its classified raster counterpart
 
-lst_class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22)
+class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22)
+# let's group the resulting images into another list.
+# please note that every object is made of 3 components: $call, $model and $map
+# this makes the list 24 objects long, but we can easily call for the same components
+# because they repeat every 3 items.
+# this means that, for example, "class[[2]]" corresponds to "class15$model" whereas "class[[5]]" corresponds to "class16$model"
 
-for (i in 1:8) {plot(lst_class[[i*3]], col=viridis(5))}
 
-for (i in 1:8) {print(freq(lst_class[[i*3]]))}
+for (i in 1:8) {plot(class[[i*3]], col=viridis(5))}
+# printing every resulting image there seems to be an issue:
+# every image has different colours for similar entities.
+# this is because "unsuperClass" randomly assigns centroids on which the splits are based, in no particular order,
+# and when plotting the 5 classes are assigned increasingly at the fixed colour pattern
+
+for (i in 1:8) {print(freq(class[[i*3]]))}
+# it is not possible to directly influence "unsuperClass" to order its classes, but to increase consistency there
+# is a way to indirectly order them from lowest frequency of occurrence to highest
+
+is.sorted = Negate(is.unsorted)
+# I'll need this later.
+# "is.sorted" equals the opposite of "is.unsorted"
+# that means that for decreasingly ordered arguments the output will be "false"
+# and for increasing ones it will be "true"
+
+for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
+{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 100, nClasses = 5, nStarts =50)) ;
+  class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
+  print(i)}}
+# since "unsuperClass" is random, repeating the process indefinitely will eventually lead to an increasingly occurring 
+# set of classes for the classified raster.
+# using the "while" function i can specify a condition i want to become false, so that while it remains true a loop is launched.
+# so in this case I specify that for i in 1:8 times (once per image), while the current i-th image has unordered frequencies of classes
+# a loop of re-splitting images, reassigning them to their variable anew and resampling the "class" group from which the conditions are tested
+# is launched, also printing the i-th number as a way to monitor the process and know when a variable is ordered, and the loop jumps to another
+
+for (i in 1:8) {plot(class[[i*3]], col=viridis(5))}
+# now more images share colours with one another, and we know that the yellow (5th) band will always be the most abundant,
+# and the dark purple (1st) will be the least abundant one
