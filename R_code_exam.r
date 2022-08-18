@@ -147,9 +147,10 @@ is.sorted = Negate(is.unsorted)
 # and for increasing ones it will be "true"
 
 for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
-{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 50, nClasses = 5, nStarts =15)) ;
-  class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
-  print(i)}}
+         {assign (lst_class[[i]], 
+         unsuperClass(sntl_c[[i]], nSamples = 50, nClasses = 5, nStarts =15)) ;
+         class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
+         print(i)}}
 # since "unsuperClass" is random, repeating the process indefinitely will eventually lead to an increasingly occurring 
 # set of classes for the classified raster.
 # using the "while" function i can specify a condition i want to become false, so that while it remains true a loop is launched.
@@ -192,7 +193,18 @@ water_content <- matrix(2015:2022, nrow=8,ncol=2)
 for (i in 1:8) {water_content[[i,2]] <- (land_cover[i,water_classes[i]]/tot)*100}
 # assigning the relative water abundance to the corresponding year
 
-plot(water_content, type = "b", main="WATER CONTENT OVER TIME", xlab="YEAR", ylab="COVER %", pch = 21, cex = 2, bg=13, col=inferno(8), col.main=viridis(1), col.axis = viridis(1), lwd=3)
+plot(water_content, 
+     type = "b", 
+     main="WATER CONTENT OVER TIME", 
+     xlab="YEAR", 
+     ylab="COVER %", 
+     pch = 21, 
+     cex = 2, 
+     bg=13, 
+     col=inferno(8), 
+     col.main=viridis(1), 
+     col.axis = viridis(1), 
+     lwd=3)
 grid(nx=NA, ny=NULL,lty=2, col="gray", lwd=2)
 abline(lm(X2 ~ X1, data=data.frame(water_content)), col="blue", lwd=2, lty=2)
 # the plot shows a clear descending trend in water abundance (besides the 2017 outlier)
@@ -201,4 +213,10 @@ abline(lm(X2 ~ X1, data=data.frame(water_content)), col="blue", lwd=2, lty=2)
 # water might have been evaporating more because of warmer climate, or could have been used more in agricolture,
 # or the Marecchia river might have been receiving less water for various reasons, or, probably, a mix of the above
 
+
+
 ### 3 ### vegetation response 
+
+
+
+
