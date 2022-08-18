@@ -8,7 +8,8 @@
 # fromAction=recuperaDettaglio).
 # It is also a part of the Natura2000 network, and a very important wet area fot migratory birds and local fauna ( link: https://www.comune.rimini.it/servizi/ambiente/aree-naturali-protette).
 # However, direct observations showed a complete drought of the area in recent times, which nullifies the above mentioned functions of the area.
-# To have a better idea of what may have happened, it could be useful to analyse recent data (2015-2022) and search for patterns of change.
+# To have a better idea of what may have happened, it could be useful to analyse recent data (2015-2022) to see if water have been decreasing stably,
+# and, if so, how vegetation responded to the drought (with the NDVI index)
 # Since july is the dryest month of the year locally (link: https://it.climate-data.org/europa/italia/emilia-romagna/rimini-1176/), 
 # it will be the month from which images will be analysed.
 # Data include all the 10 mts resolution bands avaiable: RGB and NIR.
@@ -17,6 +18,8 @@
 
 # SUMMARY
 # 1 # import and data preparation
+## 2 ## land cover
+### 3 ### vegetation response 
 
 
 
@@ -54,10 +57,10 @@ plotRGB(sntl16, r=3, g=2, b=1, stretch="lin")
 # plot test on a random image from the dataset. Everything seems fine.
 # the image will also be used for freehand tracing of the cutting guide
 
-mask <- drawExtent(show=T, col = "red")
+zoom <- drawExtent(show=T, col='red')
 # cutting the images to only include the study area requires freehand drawing of a rectangle to sample
 # a smaller portion of the images downloaded to fit only the study area, with the "drawExtent() function.
-# First, I create a "mask" object,  whose dimentions will be used as a reference for cutting all the layers
+# First, I create a "zoom" object,  whose dimentions will be used as a reference for cutting all the layers
 # later. Since the image is very big compared to the study area the cycle of drawing and cutting will be
 # repeated more than once to get more and more precise cuts, until it fits just right.
 
@@ -67,7 +70,7 @@ lst_sntl_c <- paste0("sntl_c",sprintf ("%02d", as.numeric(15:22)))
 sntl <- c(sntl15, sntl16, sntl17, sntl18, sntl19, sntl20, sntl21, sntl22)
 # let's regroup the individual stacks into a list to cut and then reassign them at the new variables
 
-for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(sntl[[i]],mask))}
+for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(sntl[[i]],zoom))}
 # a simple loop to do the previously stated actions: cutting every stack using "mask" dimentions and assign it to the new variable.
 # this procedure is repeated until the resulting images include only the In.Cal.System
 
@@ -91,7 +94,6 @@ dev.off()
 
 
 ## 2 ## land cover
-
 
 
 library(viridis)
@@ -145,7 +147,7 @@ is.sorted = Negate(is.unsorted)
 # and for increasing ones it will be "true"
 
 for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
-{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 20, nClasses = 5, nStarts =15)) ;
+{assign (lst_class[[i]], unsuperClass(sntl_c[[i]], nSamples = 50, nClasses = 5, nStarts =15)) ;
   class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
   print(i)}}
 # since "unsuperClass" is random, repeating the process indefinitely will eventually lead to an increasingly occurring 
@@ -163,5 +165,40 @@ par(mfrow=c(4,2), bty="n",mai=c(0,0,0.2,0))
 for (i in 1:8) {plot(class[[i*3]], col=viridis(5), axes=F, main=i+2014)}
 # now more images share colours with one another, and we know that the yellow (5th) band will always be the most abundant,
 # and the dark purple (1st) will be the least abundant one
+# the objective was to divide similar covers into groups, to try to set water apart ftom other surfaces
+# unfortunately, comparing the resulting plots with the RGB images imprecisions in class division can be spotted
+# because "unsuperClass" lacks the precision to consistenly divide surfaces in their actual cover tipes
+# in heterogenueous images
+# still, inaccuracies aside, it is possible to distinguish between water and other surfaces in all images,
+# so we can calculate the relative water quantity using pixel frequencies
+# the class containing water will be chosen manually based on the comparison with the RGB plots
 
 dev.off()
+ 
+land_cover <- matrix(nrow = 8, ncol = 5, dimnames = list(c(2015:2022), c("dark purple", "gray", "dark green", "green", "yellow")))
+# to extract the class frequencies i will first build a matrix of the right size to fit the data in
+
+for (i in 1:8) {land_cover[i,] <- freq(class[[i*3]])[,2]}
+# extracting data
+
+tot <- sum(land_cover[1,])
+# getting the total number of pixels per image, needed for the relativization of the water abundance
+
+water_classes <- c(5,5,1,5,4,2,2,1)
+# the "land_cover" columns containing the water abundance classes, selected manually
+
+water_content <- matrix(2015:2022, nrow=8,ncol=2)
+
+for (i in 1:8) {water_content[[i,2]] <- (land_cover[i,water_classes[i]]/tot)*100}
+# assigning the relative water abundance to the corresponding year
+
+plot(water_content, type = "b", main="WATER CONTENT OVER TIME", xlab="YEAR", ylab="COVER %", pch = 21, cex = 2, bg=13, col=inferno(8), col.main=viridis(1), col.axis = viridis(1), lwd=3)
+grid(nx=NA, ny=NULL,lty=2, col="gray", lwd=2)
+abline(lm(X2 ~ X1, data=data.frame(water_content)), col="blue", lwd=2, lty=2)
+# the plot shows a clear descending trend in water abundance (besides the 2017 outlier)
+# we can conclude that water has been decreasing in a somewhat stable way in the past 8 years
+# the reasons might be of various nature:
+# water might have been evaporating more because of warmer climate, or could have been used more in agricolture,
+# or the Marecchia river might have been receiving less water for various reasons, or, probably, a mix of the above
+
+### 3 ### vegetation response 
