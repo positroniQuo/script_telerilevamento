@@ -17,6 +17,7 @@
 # packages will be loaded one by one when needed in the corresponding section
 
 # SUMMARY
+
 # 1 # import and data preparation
 ## 2 ## land cover
 ### 3 ### vegetation response 
@@ -93,7 +94,9 @@ for (i in 1:8) {plotRGB(sntl_c[[i]], r=3, g=2, b=1, axes=T, main=(i+2014), stret
 dev.off()
 
 
+
 ## 2 ## land cover
+
 
 
 library(viridis)
@@ -111,8 +114,17 @@ plotRGB(sntl_c22, r=3, g=2, b=1, stretch="hist")
 dev.off()
 # to begin, let's have a look at the first image (2015) paired with the last (2022) plotted in visible colours 
 # we can already see a drastic change in the complete disappearing of the lakes to the right
-# to have a better idea of how the surrounding environment have shifted in cover over time 
-# I will be dividing the images into groups of values using the unsuperclass function
+
+cl <- colorRampPalette(c('red','yellow','green'))(100) 
+sntl_diff <- sntl_c15-sntl_c22
+# a way to easily visualize patterns of change is to subtract the reflectance values between two images
+# we can plot the results to highlight the zones in which reflectance changed the most [red highlight]
+
+jpeg(filename="Reflectance_difference.jpeg")
+
+plot(sntl_diff, col=cl, stretch="hist")
+
+dev.off()
 
 lst_class <- paste0 ('class', sprintf ("%02d", as.numeric(15:22))) 
 # other names for the classified images to be assigned at [lst_class = list of classified, classNN = classified (years 2015-2022)] 
@@ -146,9 +158,9 @@ is.sorted = Negate(is.unsorted)
 # that means that for decreasingly ordered arguments the output will be "false"
 # and for increasing ones it will be "true"
 
-for( i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
+for(i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
          {assign (lst_class[[i]], 
-         unsuperClass(sntl_c[[i]], nSamples = 50, nClasses = 5, nStarts =15)) ;
+         unsuperClass(sntl_c[[i]], nSamples = 50, nClasses = 5, nStarts =15));
          class <- c(class15, class16, class17, class18 ,class19, class20 , class21, class22);
          print(i)}}
 # since "unsuperClass" is random, repeating the process indefinitely will eventually lead to an increasingly occurring 
@@ -214,9 +226,6 @@ abline(lm(X2 ~ X1, data=data.frame(water_content)), col="blue", lwd=2, lty=2)
 # or the Marecchia river might have been receiving less water for various reasons, or, probably, a mix of the above
 
 
-
 ### 3 ### vegetation response 
-
-
 
 
