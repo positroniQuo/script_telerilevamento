@@ -303,7 +303,7 @@ for (i in 1:8) {assign(lst_NDVI[i],
 NDVI_diff <- NDVI_value22-NDVI_value15
 # subtracting the 2022 index from the 2015 one we can observe even more clearly the changes that occurred
 
-jpeg("NDVI_DIFFERENCE")
+jpeg("ndvi_difference.jpeg")
 
 ggplot() +
   geom_raster(NDVI_diff, mapping=aes(x=x, y=y, fill=layer), show.legend = T) +
