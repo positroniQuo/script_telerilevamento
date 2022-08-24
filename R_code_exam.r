@@ -303,7 +303,6 @@ ggplot() +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_viridis(option="turbo", name="NDVI relative change")
-# color scale has been reversed to picture the biggest positive changes in NDVI with the red colour
 # as stated a big portion of the NDVI changes occurred in the centre of the main lake, because of the disappearing of water
 # the small forest around the lake seems to have slightly decreased its NDVI value
 # unfortunately direct observation of the area reparted almost no nests left, even thought the vegetation persists
