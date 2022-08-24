@@ -167,12 +167,6 @@ for (i in 1:8) {print(freq(class[[i*3]]))}
 # it is not possible to directly influence "unsuperClass" to order its classes, but to increase consistency there
 # is a way to indirectly order them from lowest frequency of occurrence to highest
 
-is.sorted = Negate(is.unsorted)
-# I'll need this later
-# "is.sorted" equals the opposite of "is.unsorted"
-# that means that for decreasingly ordered arguments the output will be "false"
-# and for increasing ones it will be "true"
-
 for(i in 1:8) {while(is.unsorted(freq(class[[i*3]])[,2])) 
          {assign (lst_class[[i]], 
          unsuperClass(sntl_c[[i]], 
