@@ -13,7 +13,7 @@
 # Since july is the dryest month of the year locally (link: https://it.climate-data.org/europa/italia/emilia-romagna/rimini-1176/), 
 # it will be the month from which images will be analysed.
 # Data include all the 10 mts resolution bands avaiable: RGB and NIR.
-# There will be the least repetitions possible in the code comments, unless needed to understand difficult passages.
+# There will be the least repetitions possible in the code comments, unless needed to understand complex passages.
 
 # NAMES OF THE USED BANDS
 
@@ -41,16 +41,19 @@
 
 
 
-library(raster)   
-library(viridis)
-library(ggplot2)
-library(RStoolbox)
-library(patchwork)
+# library(package) # package uses in the project
+
+library(raster) # image processing
+library(viridis) # colour palettes eyesight-disfunctions-friendly
+library(ggplot2) # plotting with more options
+library(RStoolbox) # used only to coherce "raster" arguments in the "fortify()" function (needed for "ggplot2" plots)
+library(patchwork) # "ggplot2" plots easy multiframe options
 
 setwd("D:/sntl_data")
+# setting working directory
 
 all_sntl <- list.files(pattern="T32TQP")
-# importing files as they have been downloaded, from the working directory [allsntl = all Sentinel]
+# importing unzipped needed files, from the working directory [all_sntl = all Sentinel]
 
 sntl <- lapply(all_sntl, raster)
 # the data comes in .jp2 format, so I can use the "raster" function on it to process and plot the images with 
@@ -59,16 +62,16 @@ sntl <- lapply(all_sntl, raster)
 sntl <- matrix(sntl, nrow = 8, ncol = 4, byrow=TRUE)
 # making the unsorted data a matrix helps with elaboration:
 # rows are for years (1=2015, 2=2016...)
-# columns are for bands (1=B2, 2=B3, 3=B4, 4=B8)
+# columns are for bands (1=B2, 2=B3, 3=B4, 4=B8 - blue, green, red and NIR respectively)
 
 lst_sntl <- paste0 ('sntl', sprintf ("%02d", as.numeric(15:22))) 
 # the last step to obtain the sorted bands for each year is to make a matrix of fitting names to assign them to
-# "sprintf" function combines desired charachters with any variable, so every name will be associated with the corresponding year
+# "sprintf" function combines charachters with any variable; in this case every name will be associated with the corresponding year
 # [sntlNN = Sentinel (years '15-'22)]
 
 for (i in seq_along (lst_sntl)) {assign (lst_sntl[[i]], stack (sntl[i,]))}
-# the ordered data is assigned to the corresponding satck of bands (every row contains the 4 needed bands), so now it is 
-# usable for plotting (for example "sntl16" will contain a stack of bands 2, 3, 4, and 8 from july 2016)
+# the ordered data is assigned to the corresponding stack of bands (every row contains the 4 needed bands), so now it is 
+# usable for plotting (for example the "sntl16" object will contain a stack of bands 2, 3, 4, and 8 from july 2016)
 
 plotRGB(sntl16, r=3, g=2, b=1, stretch="lin")
 # plotRGB test on a random image from the dataset, "hist" stretch enhances colours
@@ -77,7 +80,7 @@ plotRGB(sntl16, r=3, g=2, b=1, stretch="lin")
 zoom <- drawExtent(show=T, col='red')
 # cutting the images to only include the study area will be done freehand drawing a rectangle to sample
 # a smaller portion of the images downloaded to fit only the study area, with the "drawExtent() function
-# so I create a "zoom" object,  whose dimentions will be used as a reference for cutting all the layers later
+# I create a "zoom" object,  whose dimentions will be used as a reference for cutting all the layers later
 # since the image is very big compared to the study area the cycle of drawing and cutting will be
 # repeated more than once to get more and more precise cuts, until it fits just right
 
@@ -89,10 +92,10 @@ sntl <- c(sntl15, sntl16, sntl17, sntl18, sntl19, sntl20, sntl21, sntl22)
 
 for (i in seq_along (lst_sntl_c)) {assign (lst_sntl_c[i], crop(sntl[[i]],zoom))}
 # a simple loop to do the previously stated actions: cutting every stack using "zoom" dimentions and assigning it to the new variable.
-# this whole cutting procedure is repeated manually until the resulting images include only the In.Cal.System
+# as stated previously, this whole cutting procedure is repeated manually until the resulting images include only the In.Cal.System area
 
 sntl_c <- c(sntl_c15, sntl_c16, sntl_c17, sntl_c18, sntl_c19, sntl_c20, sntl_c21, sntl_c22)
-# "sntl_c" is a list containing all the cut images that i can call at need to process all at once
+# "sntl_c" is a list containing all the cut images that I can call at need to process all at once
 
 jpeg("RGB_images.jpeg")
 # jpeg export of the graphic outcome
@@ -128,9 +131,10 @@ dev.off()
 # we can already see a drastic change in the almost complete disappearing of the lakes
 
 cl <- colorRampPalette(c('red','yellow','green'))(100)
+# building a colour palette to use in plotting specifying the desired colours and "breaks" from one colour to the other
 
 sntl_diff <- sntl_c15-sntl_c22
-# one of the easyest ways to visualize patterns of change is to subtract the reflectance values between two images [sntl_diff = Sentinel difference]
+# one of the easiest ways to visualize patterns of change is to subtract the reflectance values between two images [sntl_diff = Sentinel difference]
 # we can plot the results to highlight the zones in which reflectance changed the most (red highlight)
 
 jpeg(filename="Reflectance_difference.jpeg")
