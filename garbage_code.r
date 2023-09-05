@@ -113,4 +113,31 @@ par(pin=c(xsize,ysize)) # to have a plot extenting to the limits of
 
 plot(er, bg='red')
 
+
+library(patchwork)
+remove.packages("patchwork")
+install.packages('basemaps')
+library(patchwork)
+library(basemaps)
+gg_raster(swi_100)
+gg_raster(swi_100, r_type = "gradient")+
+  scale_fill_viridis(option = "mako") +
+  labs(fill = 'Water Content %') +
+  ggtitle("SWI Emilia Romagna") +
+  theme(legend.position = c(.26, .32),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(5, 5, 5, 5))
+
+
+ggplot() +
+  geom_raster(swi_100, mapping=aes(x=x,y=y,fill=X2020.07.02)) +
+  scale_fill_viridis(option = "mako") +
+  labs(fill = 'Water Content %') +
+  ggtitle("SWI Emilia Romagna") +
+  theme(legend.position = c(.26, .32),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(5, 5, 5, 5))
+
 ###########################################
